@@ -2,8 +2,6 @@
 class Factory
   def self.new(*keys, &block)
     Class.new do
-      class_eval(&block) if block_given?
-
       attr_accessor(*keys)
       define_method 'initialize' do |*values|
         keys.each_with_index do |key, i|
@@ -17,11 +15,13 @@ class Factory
       end
 
       def to_s
-        print "#<factory #{self.class}"
+        "#<factory #{self.class}"
         instance_variables.each do |var|
-          print " #{var[1..-1]}=" + '"' + instance_variable_get(var).to_s + '"'
+          " #{var[1..-1]}=" + '"' + instance_variable_get(var).to_s + '"'
         end
       end
+
+      class_eval(&block) if block_given?
     end
   end
 end
